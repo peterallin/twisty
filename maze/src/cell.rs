@@ -1,8 +1,7 @@
-#![allow(dead_code)]
-
 use std::collections::BTreeMap;
+
 #[derive(Debug)]
-struct MazeCell {
+pub struct MazeCell {
     links: BTreeMap<Id, bool>,
     row: i32,
     col: i32,
@@ -10,21 +9,21 @@ struct MazeCell {
 }
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
-struct Id {
+pub struct Id {
     row: i32,
     col: i32,
 }
 
 #[derive(Debug, Default)]
-struct Configuration {
-    north: Option<Id>,
-    south: Option<Id>,
-    east: Option<Id>,
-    west: Option<Id>,
+pub struct Configuration {
+    pub north: Option<Id>,
+    pub south: Option<Id>,
+    pub east: Option<Id>,
+    pub west: Option<Id>,
 }
 
 impl MazeCell {
-    fn new(row: i32, col: i32) -> Self {
+    pub fn new(row: i32, col: i32) -> Self {
         Self {
             row,
             col,
@@ -33,18 +32,18 @@ impl MazeCell {
         }
     }
 
-    fn configure(&mut self, configuration: Configuration) {
+    pub fn configure(&mut self, configuration: Configuration) {
         self.configuration = configuration;
     }
 
-    fn id(&self) -> Id {
+    pub fn id(&self) -> Id {
         Id {
             row: self.row,
             col: self.col,
         }
     }
 
-    fn neighbors(&self) -> Vec<Id> {
+    pub fn neighbors(&self) -> Vec<Id> {
         [
             self.configuration.north,
             self.configuration.south,
@@ -57,16 +56,16 @@ impl MazeCell {
         .collect()
     }
 
-    fn is_linked(&self, other: &MazeCell) -> bool {
+    pub fn is_linked(&self, other: &MazeCell) -> bool {
         *self.links.get(&other.id()).unwrap_or(&false)
     }
 
-    fn link(&mut self, other: &mut MazeCell) {
+    pub fn link(&mut self, other: &mut MazeCell) {
         self.links.insert(other.id(), true);
         other.links.insert(self.id(), true);
     }
 
-    fn links(&self) -> Vec<Id> {
+    pub fn links(&self) -> Vec<Id> {
         self.links.keys().copied().collect()
     }
 }
