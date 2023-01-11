@@ -10,9 +10,8 @@ impl Grid {
             .map(|row| make_row(row, column_count))
             .collect();
 
-        let mut configs = vec![];
-        for (row_number, row_cells) in cells.iter().enumerate() {
-            for (column_number, _cell) in row_cells.iter().enumerate() {
+        for row_number in 0..row_count {
+            for column_number in 0..column_count {
                 let north = if row_number > 0 {
                     Some(cells[row_number - 1][column_number].id())
                 } else {
@@ -39,11 +38,8 @@ impl Grid {
                     west,
                     east,
                 };
-                configs.push((row_number, column_number, configuration));
+                cells[row_number][column_number].configure(configuration);
             }
-        }
-        for (row, col, config) in configs {
-            cells[row][col].configure(config);
         }
         Self { cells }
     }
