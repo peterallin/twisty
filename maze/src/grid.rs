@@ -1,4 +1,7 @@
+use std::fmt::Display;
+
 use crate::{cell::Configuration, MazeCell};
+use itertools::Itertools;
 
 pub struct Grid {
     cells: Vec<Vec<MazeCell>>,
@@ -48,8 +51,61 @@ impl Grid {
         &self.cells[row as usize][column as usize]
     }
 
+    pub fn link(&mut self, (row1, col1): (i32, i32), (row2, col2): (i32, i32)) {
+        let mut c1 = std::mem::take(&mut self.cells[row1 as usize][col1 as usize]);
+        let mut c2 = std::mem::take(&mut self.cells[row2 as usize][col2 as usize]);
+        c1.link(&mut c2);
+        self.cells[row1 as usize][col1 as usize] = c1;
+        self.cells[row2 as usize][col2 as usize] = c2;
+    }
+
+    pub fn get_mut(&mut self, row: i32, column: i32) -> &mut MazeCell {
+        &mut self.cells[row as usize][column as usize]
+    }
+
     pub fn rows(&self) -> impl Iterator<Item = &Vec<MazeCell>> {
         self.cells.iter()
+    }
+
+    pub fn cells(&self) -> impl Iterator<Item = &MazeCell> {
+        self.cells.iter().flatten()
+    }
+}
+
+impl Display for Grid {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut result: String = Itertools::intersperse((0..10).map(|_| "+---"), "").collect();
+        result.push_str("+\n");
+
+        for row in self.rows() {
+            let mut line1 = "|".to_string();
+            let mut line2 = "+".to_string();
+            for cell in row {
+                line1 += if let Some(east) = cell.east() {
+                    if cell.is_linked(&east) {
+                        "    "
+                    } else {
+                        "   |"
+                    }
+                } else {
+                    "   |"
+                };
+                line2 += if let Some(south) = cell.south() {
+                    if cell.is_linked(&south) {
+                        "   +"
+                    } else {
+                        "---+"
+                    }
+                } else {
+                    "---+"
+                };
+            }
+            result.push_str(&line1);
+            result.push('\n');
+            result.push_str(&line2);
+            result.push('\n');
+        }
+        write!(f, "{}", result)
     }
 }
 

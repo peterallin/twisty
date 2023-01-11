@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct MazeCell {
     links: BTreeMap<Id, bool>,
     row: i32,
@@ -56,8 +56,23 @@ impl MazeCell {
         .collect()
     }
 
-    pub fn is_linked(&self, other: &MazeCell) -> bool {
-        *self.links.get(&other.id()).unwrap_or(&false)
+    pub fn north(&self) -> Option<Id> {
+        self.configuration.north
+    }
+
+    pub fn south(&self) -> Option<Id> {
+        self.configuration.south
+    }
+
+    pub fn east(&self) -> Option<Id> {
+        self.configuration.east
+    }
+    pub fn west(&self) -> Option<Id> {
+        self.configuration.west
+    }
+
+    pub fn is_linked(&self, other: &Id) -> bool {
+        *self.links.get(other).unwrap_or(&false)
     }
 
     pub fn link(&mut self, other: &mut MazeCell) {
@@ -78,11 +93,11 @@ mod test {
     fn cells_can_be_linked() {
         let mut cell1 = MazeCell::new(1, 1);
         let mut cell2 = MazeCell::new(1, 2);
-        assert!(!cell1.is_linked(&cell2));
-        assert!(!cell2.is_linked(&cell1));
+        assert!(!cell1.is_linked(&cell2.id()));
+        assert!(!cell2.is_linked(&cell1.id()));
         cell1.link(&mut cell2);
-        assert!(cell1.is_linked(&cell2));
-        assert!(cell2.is_linked(&cell1));
+        assert!(cell1.is_linked(&cell2.id()));
+        assert!(cell2.is_linked(&cell1.id()));
     }
 
     #[test]
