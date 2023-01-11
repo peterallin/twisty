@@ -67,8 +67,21 @@ name = "twisty"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "twisty-gfx",
+ "twisty-maze",
+]
+
+[[package]]
+name = "twisty-gfx"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
  "sdl2",
 ]
+
+[[package]]
+name = "twisty-maze"
+version = "0.1.0"
 
 [[package]]
 name = "version-compare"
