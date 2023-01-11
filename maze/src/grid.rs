@@ -45,7 +45,7 @@ impl Grid {
     }
 
     pub fn get(&self, row: i32, column: i32) -> &MazeCell {
-&self.cells[row as usize][column as usize]
+        &self.cells[row as usize][column as usize]
     }
 
     pub fn rows(&self) -> impl Iterator<Item = &Vec<MazeCell>> {

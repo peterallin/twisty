@@ -13,7 +13,7 @@ pub fn run() -> Result<()> {
         if i % 7 != 0 {
             continue;
         }
-        canvas.set_draw_color((255, i as u8, i / 1.8 as u8));
+        canvas.set_draw_color((255, i, i / 1.8 as u8));
         canvas
             .draw_line((100, 100), (200, 200 + i as i32))
             .map_err(|e| anyhow!(e))?;
@@ -22,6 +22,7 @@ pub fn run() -> Result<()> {
 
     while keep_running {
         for event in context.event_pump().map_err(|e| anyhow!(e))?.poll_iter() {
+            #[allow(clippy::single_match)] // I am expecting more events to be handled later
             match event {
                 Event::Quit { .. } => {
                     keep_running = false;
