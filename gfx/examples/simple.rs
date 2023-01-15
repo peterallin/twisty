@@ -1,7 +1,7 @@
 use anyhow::Result;
 use twisty_maze::Grid;
 
-fn main() ->Result<()>{
+fn main() -> Result<()> {
     let maze = make_maze();
     twisty_gfx::run(maze)?;
     Ok(())

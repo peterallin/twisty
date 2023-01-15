@@ -4,5 +4,3 @@ fn main() -> Result<()> {
     println!("Nothing here yet");
     Ok(())
 }
-
-
