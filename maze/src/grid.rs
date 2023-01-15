@@ -47,6 +47,14 @@ impl Grid {
         Self { cells }
     }
 
+    pub fn row_count(&self) -> usize {
+        self.rows().count()
+    }
+
+    pub fn column_count(&self) -> usize {
+        self.rows().next().unwrap().len()
+    }
+
     pub fn get(&self, row: i32, column: i32) -> &MazeCell {
         &self.cells[row as usize][column as usize]
     }

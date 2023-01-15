@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.68"
 sdl2 = { version = "0.35.2", features = ["gfx", "image", "ttf"] }
+twisty-maze = { path = "../maze" }
