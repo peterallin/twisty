@@ -9,7 +9,6 @@ fn main() -> Result<()> {
         Algorithm::BinaryTree => binary_tree(options.rows, options.columns),
     };
     twisty_gfx::run(maze)?;
-    // println!("{maze}");
     Ok(())
 }
 
