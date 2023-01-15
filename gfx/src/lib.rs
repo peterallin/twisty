@@ -41,8 +41,8 @@ fn draw_maze(canvas: &mut Canvas<Window>, grid: &Grid) -> Result<(), String> {
     let cell_height = height / grid.row_count() as i32;
     let cell_size = std::cmp::min(cell_width, cell_height);
 
-    let width = grid.row_count() as i32 * cell_size;
-    let height = grid.column_count() as i32 * cell_size;
+    let width = grid.column_count() as i32 * cell_size;
+    let height = grid.row_count() as i32 * cell_size;
 
     let left = (canvas_width - width) / 2;
     let top = (canvas_height - height) / 2;
