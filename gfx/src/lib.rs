@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Result};
 use sdl2::{event::Event, render::Canvas, video::Window};
-use twisty_maze::{Grid, MazeCell};
+use twisty_maze::Grid;
 
 pub fn run(grid: Grid) -> Result<()> {
     let context = sdl2::init().map_err(|e| anyhow!(e))?;
@@ -57,13 +57,13 @@ fn draw_maze(canvas: &mut Canvas<Window>, grid: &Grid) -> Result<(), String> {
         for (column_number, cell) in row.iter().enumerate() {
             let cell_left = left + (column_number as i32 * cell_size);
             let cell_top = top + (row_number as i32 * cell_size);
-            if has_south_wall(cell) {
+            if cell.has_south_wall() {
                 canvas.draw_line(
                     (cell_left, cell_top + cell_size),
                     (cell_left + cell_size, cell_top + cell_size),
                 )?;
             }
-            if has_east_wall(cell) {
+            if cell.has_east_wall() {
                 canvas.draw_line(
                     (cell_left + cell_size, cell_top),
                     (cell_left + cell_size, cell_top + cell_size),
@@ -75,18 +75,4 @@ fn draw_maze(canvas: &mut Canvas<Window>, grid: &Grid) -> Result<(), String> {
     canvas.draw_line((left, top), (left, top + height))?;
 
     Ok(())
-}
-
-fn has_south_wall(cell: &MazeCell) -> bool {
-    match cell.south() {
-        Some(south) if cell.is_linked(&south) => false,
-        _ => true,
-    }
-}
-
-fn has_east_wall(cell: &MazeCell) -> bool {
-    match cell.east() {
-        Some(east) if cell.is_linked(&east) => false,
-        _ => true,
-    }
 }

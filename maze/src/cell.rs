@@ -83,6 +83,22 @@ impl MazeCell {
     pub fn links(&self) -> Vec<Id> {
         self.links.keys().copied().collect()
     }
+
+    #[allow(clippy::match_like_matches_macro)] // In this case I find the match more readable
+    pub fn has_south_wall(&self) -> bool {
+        match self.south() {
+            Some(south) if self.is_linked(&south) => false,
+            _ => true,
+        }
+    }
+
+    #[allow(clippy::match_like_matches_macro)] // In this case I find the match more readable
+    pub fn has_east_wall(&self) -> bool {
+        match self.east() {
+            Some(east) if self.is_linked(&east) => false,
+            _ => true,
+        }
+    }
 }
 
 #[cfg(test)]

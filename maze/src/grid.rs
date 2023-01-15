@@ -89,23 +89,11 @@ impl Display for Grid {
             let mut line1 = "|".to_string();
             let mut line2 = "+".to_string();
             for cell in row {
-                line1 += if let Some(east) = cell.east() {
-                    if cell.is_linked(&east) {
-                        "    "
-                    } else {
-                        "   |"
-                    }
-                } else {
-                    "   |"
-                };
-                line2 += if let Some(south) = cell.south() {
-                    if cell.is_linked(&south) {
-                        "   +"
-                    } else {
-                        "---+"
-                    }
-                } else {
+                line1 += if cell.has_east_wall() { "   |" } else { "    " };
+                line2 += if cell.has_south_wall() {
                     "---+"
+                } else {
+                    "    "
                 };
             }
             result.push_str(&line1);
