@@ -92,11 +92,19 @@ impl Grid {
     pub fn ids(&self) -> Vec<crate::cell::Id> {
         self.cells().map(|c| c.id()).collect()
     }
+
+    pub fn ids_by_rows(&self) -> Vec<Vec<crate::cell::Id>> {
+        self.cells
+            .iter()
+            .map(|r| r.iter().map(|c| c.id()).collect::<Vec<_>>())
+            .collect::<Vec<_>>()
+    }
 }
 
 impl Display for Grid {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut result: String = Itertools::intersperse((0..self.column_count()).map(|_| "+---"), "").collect();
+        let mut result: String =
+            Itertools::intersperse((0..self.column_count()).map(|_| "+---"), "").collect();
         result.push_str("+\n");
 
         for row in self.rows() {
@@ -198,5 +206,27 @@ mod test {
         assert!(row[0].is_linked(&row[1].id()));
         assert!(row[1].is_linked(&row[2].id()));
         assert!(!row[0].is_linked(&row[2].id()));
+    }
+
+    #[test]
+    fn can_get_ids_by_row() {
+        let grid = Grid::new(3, 4);
+        let ids_in_rows = grid.ids_by_rows();
+        assert_eq!(3, ids_in_rows.len());
+        for row in &ids_in_rows {
+            assert_eq!(4, row.len());
+        }
+        assert_eq!(ids_in_rows[0][0], grid.get(0, 0).id());
+        assert_eq!(ids_in_rows[0][1], grid.get(0, 1).id());
+        assert_eq!(ids_in_rows[0][2], grid.get(0, 2).id());
+        assert_eq!(ids_in_rows[0][3], grid.get(0, 3).id());
+        assert_eq!(ids_in_rows[1][0], grid.get(1, 0).id());
+        assert_eq!(ids_in_rows[1][1], grid.get(1, 1).id());
+        assert_eq!(ids_in_rows[1][2], grid.get(1, 2).id());
+        assert_eq!(ids_in_rows[1][3], grid.get(1, 3).id());
+        assert_eq!(ids_in_rows[2][0], grid.get(2, 0).id());
+        assert_eq!(ids_in_rows[2][1], grid.get(2, 1).id());
+        assert_eq!(ids_in_rows[2][2], grid.get(2, 2).id());
+        assert_eq!(ids_in_rows[2][3], grid.get(2, 3).id());
     }
 }
