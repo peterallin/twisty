@@ -37,8 +37,16 @@ fn draw_maze(canvas: &mut Canvas<Window>, grid: &Grid) -> Result<(), String> {
     let width = percentage_use * canvas_width / 100;
     let height = percentage_use * canvas_height / 100;
 
+    let cell_width = width / grid.column_count() as i32;
+    let cell_height = height / grid.row_count() as i32;
+    let cell_size = std::cmp::min(cell_width, cell_height);
+
+    let width = grid.row_count() as i32 * cell_size;
+    let height = grid.column_count() as i32 * cell_size;
+
     let left = (canvas_width - width) / 2;
     let top = (canvas_height - height) / 2;
+
 
     canvas.set_draw_color((20, 20, 20));
     canvas.fill_rect(sdl2::rect::Rect::new(
@@ -48,9 +56,6 @@ fn draw_maze(canvas: &mut Canvas<Window>, grid: &Grid) -> Result<(), String> {
         height as u32,
     ))?;
 
-    let cell_width = width / grid.column_count() as i32;
-    let cell_height = height / grid.row_count() as i32;
-    let cell_size = std::cmp::min(cell_width, cell_height);
     canvas.set_draw_color((127, 127, 127));
 
     for (row_number, row) in grid.rows().enumerate() {
