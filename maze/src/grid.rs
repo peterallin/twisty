@@ -59,12 +59,22 @@ impl Grid {
         &self.cells[row as usize][column as usize]
     }
 
+    pub fn get_by_id(&self, id: crate::cell::Id) -> &MazeCell {
+        &self.cells[id.row as usize][id.col as usize]
+    }
+
     pub fn link(&mut self, (row1, col1): (i32, i32), (row2, col2): (i32, i32)) {
         let mut c1 = std::mem::take(&mut self.cells[row1 as usize][col1 as usize]);
         let mut c2 = std::mem::take(&mut self.cells[row2 as usize][col2 as usize]);
         c1.link(&mut c2);
         self.cells[row1 as usize][col1 as usize] = c1;
         self.cells[row2 as usize][col2 as usize] = c2;
+    }
+
+    pub fn link_by_id(&mut self, id1: crate::cell::Id, id2: crate::cell::Id) {
+        let cell1 = self.cells[id1.row as usize][id1.col as usize].id();
+        let cell2 = self.cells[id2.row as usize][id2.col as usize].id();
+        self.link((cell1.row, cell1.col), (cell2.row, cell2.col));
     }
 
     pub fn get_mut(&mut self, row: i32, column: i32) -> &mut MazeCell {
@@ -78,11 +88,15 @@ impl Grid {
     pub fn cells(&self) -> impl Iterator<Item = &MazeCell> {
         self.cells.iter().flatten()
     }
+
+    pub fn ids(&self) -> Vec<crate::cell::Id> {
+        self.cells().map(|c| c.id()).collect()
+    }
 }
 
 impl Display for Grid {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut result: String = Itertools::intersperse((0..10).map(|_| "+---"), "").collect();
+        let mut result: String = Itertools::intersperse((0..self.column_count()).map(|_| "+---"), "").collect();
         result.push_str("+\n");
 
         for row in self.rows() {
@@ -168,5 +182,21 @@ mod test {
         assert!(bottom_row[1].neighbors().contains(&grid.get(2, 0).id()));
         assert!(bottom_row[1].neighbors().contains(&grid.get(2, 2).id()));
         assert!(bottom_row[1].neighbors().contains(&grid.get(1, 1).id()));
+    }
+
+    #[test]
+    fn can_link_by_ids() {
+        let mut grid = Grid::new(1, 3);
+        let row = grid.rows().next().unwrap();
+        let cell0 = row[0].id();
+        let cell1 = row[1].id();
+        let cell2 = row[2].id();
+        grid.link_by_id(cell0, cell1);
+        grid.link_by_id(cell1, cell2);
+
+        let row = grid.rows().next().unwrap();
+        assert!(row[0].is_linked(&row[1].id()));
+        assert!(row[1].is_linked(&row[2].id()));
+        assert!(!row[0].is_linked(&row[2].id()));
     }
 }

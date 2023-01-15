@@ -10,8 +10,8 @@ pub struct MazeCell {
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
 pub struct Id {
-    row: i32,
-    col: i32,
+    pub(crate) row: i32,
+    pub(crate) col: i32,
 }
 
 #[derive(Debug, Default)]
